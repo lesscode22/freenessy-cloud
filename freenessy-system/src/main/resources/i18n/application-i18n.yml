@@ -1,0 +1,10 @@
+i18n:
+  # 若前端无header传参则返回中文信息
+  default-lang: cn
+  message:
+    password_not_null:
+      en: Password can't be null
+      cn: 密码不能为空
+    password_cannot_same:
+      en: The old and new passwords cannot be the same
+      cn: 新旧密码不能相同

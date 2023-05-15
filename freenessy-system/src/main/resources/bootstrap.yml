@@ -1,0 +1,10 @@
+server:
+  port: 7001
+
+spring:
+  application:
+    name: system-server
+  main:
+    allow-bean-definition-overriding: true
+  profiles:
+    active: dev

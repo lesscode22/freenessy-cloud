@@ -1,0 +1,8 @@
+spring:
+  cloud:
+    nacos:
+      config:
+        server-addr: @nacos.url@
+        file-extension: yaml
+        group: DEFAULT_GROUP
+        namespace: freenessy

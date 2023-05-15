@@ -1,0 +1,18 @@
+spring:
+  cloud:
+    nacos:
+      discovery:
+        server-addr: @nacos.url@
+        namespace: freenessy
+      config:
+        server-addr: @nacos.url@
+        namespace: freenessy
+        group: DEFAULT_GROUP
+        file-extension: yaml
+        sharedConfigs:
+          - dataId: common-cache.yaml
+            group: DEFAULT_GROUP
+            refresh: true
+          - dataId: common-file.yaml
+            group: DEFAULT_GROUP
+            refresh: true
