@@ -20,6 +20,10 @@
             <groupId>cn.starry</groupId>
             <artifactId>freenessy-starter-web</artifactId>
         </dependency>
+        <dependency>
+            <groupId>cn.starry</groupId>
+            <artifactId>freenessy-starter-cache</artifactId>
+        </dependency>
     </dependencies>
 
 </project>

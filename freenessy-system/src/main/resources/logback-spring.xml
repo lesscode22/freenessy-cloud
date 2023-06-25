@@ -12,7 +12,9 @@
 
     <!-- property定义参数, 后面可以通过${}引用 -->
     <!-- 输出日志格式 -->
-    <property name="CONSOLE_LOG_PATTERN" value="%red(%d{yyyy-MM-dd HH:mm:ss.SSS}) %highlight(%-5level) %green([%thread]) %boldMagenta(%logger{50}) - %cyan(%msg%n)"/>
+    <property name="LOCAL_LOG_PATTERN" value="%red(%d{yyyy-MM-dd HH:mm:ss.SSS}) %highlight(%-5level) %green([%thread]) %boldMagenta(%logger{50}) - %cyan(%msg%n)"/>
+    <!-- 服务器端去掉颜色渲染, 避免潜在的问题 -->
+    <property name="PROD_LOG_PATTERN" value="%d{yyyy-MM-dd HH:mm:ss.SSS} %-5level [%thread] %logger{50} - (%msg%n)"/>
     <!-- 日志输出文件位置 -->
     <property name="LOG_HOME" value="/home/freenessy-log" />
 
@@ -24,7 +26,7 @@
         </filter>
         <encoder>
             <!-- 引用上面定义的日志输出格式 -->
-            <Pattern>${CONSOLE_LOG_PATTERN}</Pattern>
+            <Pattern>${LOCAL_LOG_PATTERN}</Pattern>
             <!-- 设置字符集 -->
             <charset>UTF-8</charset>
         </encoder>
@@ -82,7 +84,7 @@
         <!--输出格式-->
         <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
             <!--格式化输出-->
-            <pattern>${CONSOLE_LOG_PATTERN}</pattern>
+            <pattern>${PROD_LOG_PATTERN}</pattern>
             <!--设置编码-->
             <charset>UTF-8</charset>
             <!-- 开启缓存 -->
@@ -115,14 +117,23 @@
 
     <!-- 开发环境输出至控制台 -->
     <springProfile name="dev">
-        <root level="INFO">
+        <root level="DEBUG">
             <appender-ref ref="CONSOLE" />
         </root>
 
-        <!-- 输出日志细粒度控制, 去掉一些debug日志 -->
-<!--        <logger name="org.springframework" level="INFO" additivity="false">-->
-<!--            <appender-ref ref="CONSOLE" />-->
-<!--        </logger>-->
+        <!-- 输出日志细粒度控制, 去掉一些外部包中的debug日志 -->
+        <logger name="org.springframework" level="INFO" additivity="false">
+            <appender-ref ref="CONSOLE" />
+        </logger>
+        <logger name="com.alibaba.nacos.client" level="INFO" additivity="false">
+            <appender-ref ref="CONSOLE" />
+        </logger>
+        <logger name="io.netty" level="INFO" additivity="false">
+            <appender-ref ref="CONSOLE" />
+        </logger>
+        <logger name="druid.sql" level="INFO" additivity="false">
+            <appender-ref ref="CONSOLE" />
+        </logger>
     </springProfile>
 
     <!-- 生产环境输出至文件和Graylog -->

@@ -2,7 +2,6 @@ package cn.starry.freenessy.system.metadata.mapper;
 
 import cn.starry.freenessy.system.metadata.entity.SysUserDO;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-import org.apache.ibatis.annotations.Mapper;
 
 /**
  * <p>

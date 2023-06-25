@@ -17,3 +17,6 @@ buildNumber.properties
 .classpath
 
 .idea
+
+# 以 / 表示当前文件所在目录, 以 * 通配多个字符, 以 ? 通配单个字符, 以 ** 匹配多级目录
+/**/pom-xml-flattened

@@ -1,10 +1,13 @@
 package cn.starry.freenessy.base.util;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.time.*;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.TemporalAccessor;
 import java.time.temporal.TemporalAdjuster;
 import java.time.temporal.TemporalAdjusters;
+import java.util.Date;
 import java.util.Locale;
 
 /**
@@ -39,10 +42,11 @@ public class DateUtil {
         return Instant.now().getEpochSecond();
     }
 
+    // ========================================= 格式转换系列 ================================================
+
     /**
      * 默认转为 yyyy-MM-dd 格式
-     * @param temporal 可接收入参 LocalDate、LocalDateTime, 其他须自定义转换格式
-     * @return String
+     * @param temporal 可接收入参 LocalDate、LocalDateTime、LocalTime,
      */
     public static String convertToString(TemporalAccessor temporal) {
         return convertToString(temporal, DEFAULT_DATE_PATTERN);
@@ -76,6 +80,22 @@ public class DateUtil {
     public static LocalDateTime convertToDateTime(String text, String pattern) {
         return LocalDateTime.parse(text, DateTimeFormatter.ofPattern(pattern, Locale.CHINA));
     }
+
+    public static Date parseJdkDate(String text) {
+        return parseJdkDate(text, DEFAULT_DATETIME_PATTERN);
+    }
+
+    public static Date parseJdkDate(String text, String pattern) {
+        SimpleDateFormat sdf = new SimpleDateFormat(pattern);
+        try {
+            return sdf.parse(text);
+        } catch (ParseException e) {
+            System.out.println("=================");
+            return null;
+        }
+    }
+
+    // ========================================= 获取特定日期时间系列 ================================================
 
     public static LocalDateTime startOfDay() {
         return startOfDay(LocalDateTime.now());
@@ -116,4 +136,8 @@ public class DateUtil {
     public static LocalDateTime endOfMonth() {
         return LocalDateTime.now().with(TemporalAdjusters.lastDayOfMonth());
     }
+
+    // ========================================= 获取日期时间差 ================================================
+
+
 }

@@ -15,4 +15,11 @@
 
     </properties>
 
+    <dependencies>
+        <dependency>
+            <groupId>cn.starry</groupId>
+            <artifactId>freenessy-starter-web</artifactId>
+        </dependency>
+    </dependencies>
+
 </project>

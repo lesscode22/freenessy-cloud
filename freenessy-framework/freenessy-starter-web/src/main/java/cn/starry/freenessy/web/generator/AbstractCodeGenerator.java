@@ -3,7 +3,8 @@ package cn.starry.freenessy.web.generator;
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.io.file.PathUtil;
 import cn.hutool.core.util.StrUtil;
-import cn.starry.freenessy.base.exception.Asserts;
+import cn.starry.freenessy.base.exception.AssertUtil;
+import cn.starry.freenessy.base.resp.DefaultErrorEnum;
 import cn.starry.freenessy.web.generator.mybatisplus.MybatisPlusGenerator;
 
 import java.io.File;
@@ -33,7 +34,7 @@ public abstract class AbstractCodeGenerator<T extends GeneratorConf> implements 
         String projectPath = FileUtil.getWebRoot().getAbsolutePath();
         String basePath = "/src/main/java/" + baseDirPath;
         File root = new File(projectPath + basePath);
-        Asserts.notNull(root, rootDirNotExist);
+        AssertUtil.isTrue(root.exists(), DefaultErrorEnum.BASE_PACKET_NOT_EXIST);
 
         final StringBuilder target = new StringBuilder();
         PathUtil.walkFiles(root.toPath(), new SimpleFileVisitor<Path>() {

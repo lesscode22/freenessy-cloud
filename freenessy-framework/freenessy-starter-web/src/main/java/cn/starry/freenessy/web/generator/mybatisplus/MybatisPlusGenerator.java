@@ -6,7 +6,6 @@ import cn.starry.freenessy.base.util.DateUtil;
 import cn.starry.freenessy.web.generator.CodeGenerator;
 import cn.starry.freenessy.web.generator.GeneratorConf;
 import cn.starry.freenessy.web.pojo.BaseEntity;
-import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.core.enums.SqlLike;
 import com.baomidou.mybatisplus.generator.FastAutoGenerator;
 import com.baomidou.mybatisplus.generator.config.TemplateType;
@@ -35,7 +34,6 @@ public class MybatisPlusGenerator implements CodeGenerator<GeneratorConf> {
                 .packageConfig(builder -> {
                     builder.parent(conf.getDir()) // 设置父包名
                             .entity("entity")
-                            .service("service")
                             .mapper("mapper");
                 })
 //                .injectionConfig(builder -> {
@@ -47,14 +45,13 @@ public class MybatisPlusGenerator implements CodeGenerator<GeneratorConf> {
                 .templateConfig(builder ->
                         builder.disable(TemplateType.CONTROLLER, TemplateType.SERVICE,
                                         TemplateType.SERVICE_IMPL, TemplateType.XML)
-//                                .service("templates/tm-service.java")
                 )
                 .strategyConfig(builder -> {
                     builder.entityBuilder()
                             .formatFileName("%sDO")
                             .enableLombok()
                             .enableChainModel()
-                            .idType(IdType.ASSIGN_ID)
+                            .addIgnoreColumns("id", "create_time", "update_time", "create_by", "update_by")
                             .enableTableFieldAnnotation()
                             .disableSerialVersionUID()
                             .superClass(BaseEntity.class)

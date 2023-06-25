@@ -1,22 +1,16 @@
 package cn.starry.freenessy.base.util;
 
+import cn.starry.freenessy.base.helper.JacksonOptions;
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.*;
-import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
-import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
-import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateDeserializer;
-import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateTimeDeserializer;
-import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateSerializer;
-import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer;
-import com.fasterxml.jackson.module.paramnames.ParameterNamesModule;
+import com.fasterxml.jackson.databind.JavaType;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
 
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 @Slf4j
 public class JsonUtil {
@@ -24,25 +18,7 @@ public class JsonUtil {
     private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
 
     static {
-        OBJECT_MAPPER.registerModules(new ParameterNamesModule(), new Jdk8Module())
-                // 反序列化遇到未知字段不报错
-                .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
-                // 序列化空对象时不报错
-                .configure(SerializationFeature.FAIL_ON_EMPTY_BEANS, false);
-
-        // Date类型格式
-        DateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        df.setTimeZone(TimeZone.getTimeZone("GMT+8"));
-        OBJECT_MAPPER.setDateFormat(df);
-
-        // LocalDate, LocalDateTime 格式
-        JavaTimeModule javaTimeModule = new JavaTimeModule();
-        javaTimeModule.addSerializer(LocalDate.class, new LocalDateSerializer(DateTimeFormatter.ofPattern("yyyy-MM-dd")));
-        javaTimeModule.addDeserializer(LocalDate.class, new LocalDateDeserializer(DateTimeFormatter.ofPattern("yyyy-MM-dd")));
-
-        javaTimeModule.addSerializer(LocalDateTime.class, new LocalDateTimeSerializer(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
-        javaTimeModule.addDeserializer(LocalDateTime.class, new LocalDateTimeDeserializer(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
-        OBJECT_MAPPER.registerModule(javaTimeModule);
+        JacksonOptions.init(OBJECT_MAPPER);
     }
 
     private JsonUtil() {}
@@ -56,7 +32,7 @@ public class JsonUtil {
             
             return OBJECT_MAPPER.writeValueAsString(obj);
         } catch (JsonProcessingException e) {
-            log.error("[JsonUtil][toJson]: ", e);
+            log.error("Json异常: ", e);
         }
         return "";
     }
@@ -68,7 +44,7 @@ public class JsonUtil {
         try {
             return OBJECT_MAPPER.writerWithDefaultPrettyPrinter().writeValueAsString(obj);
         } catch (JsonProcessingException e) {
-            log.error("[JsonUtil][toJsonFormat]: ", e);
+            log.error("Json异常: ", e);
         }
         return "";
     }
@@ -78,7 +54,7 @@ public class JsonUtil {
             JsonNode jsonNode = OBJECT_MAPPER.readTree(text);
             return jsonNode.findValue(key).asText();
         } catch (JsonProcessingException e) {
-            log.error("[JsonUtil][getNodeValue]: ", e);
+            log.error("Json异常: ", e);
         }
         return null;
     }
@@ -87,7 +63,7 @@ public class JsonUtil {
         try {
             return OBJECT_MAPPER.readValue(text, clazz);
         } catch (JsonProcessingException e) {
-            log.error("[JsonUtil][fromJson]: ", e);
+            log.error("Json异常: ", e);
         }
         return null;
     }
@@ -101,7 +77,7 @@ public class JsonUtil {
         try {
             return OBJECT_MAPPER.readValue(text, getListType(clazz));
         } catch (JsonProcessingException e) {
-            log.error("[JsonUtil][fromJsonToList]: ", e);
+            log.error("Json异常: ", e);
         }
         return new ArrayList<>();
     }
@@ -110,7 +86,7 @@ public class JsonUtil {
         try {
             return OBJECT_MAPPER.readValue(text, getListType(getMapType()));
         } catch (JsonProcessingException e) {
-            log.error("[JsonUtil][fromJsonToListMap]: ", e);
+            log.error("Json异常: ", e);
         }
         return new ArrayList<>();
     }
@@ -119,7 +95,7 @@ public class JsonUtil {
         try {
             return OBJECT_MAPPER.readValue(text, getMapType());
         } catch (JsonProcessingException e) {
-            log.error("[JsonUtil][fromJsonToMap]: ", e);
+            log.error("Json异常: ", e);
         }
         return new HashMap<>();
     }

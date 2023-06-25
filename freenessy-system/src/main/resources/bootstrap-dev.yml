@@ -16,3 +16,7 @@ spring:
           - dataId: common-file.yaml
             group: DEFAULT_GROUP
             refresh: true
+        extensionConfigs:
+          - dataId: db-system.yaml
+            group: DEFAULT_GROUP
+            refresh: true

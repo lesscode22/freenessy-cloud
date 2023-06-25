@@ -4,9 +4,11 @@ import cn.hutool.core.convert.Convert;
 import lombok.Data;
 
 import java.io.Serializable;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 @Data
-public class Result<T> implements Serializable {
+public final class Result<T> implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
@@ -37,24 +39,18 @@ public class Result<T> implements Serializable {
     }
 
     public static <T> Result<T> ok(T data) {
-        return restResult(ResultCode.SUCCESS, data, null);
+        return restResult(DefaultErrorEnum.SUCCESS, data);
     }
 
     /**
      * 调用失败
      */
     public static <T> Result<T> error() {
-        return error(ResultCode.FAIL);
+        return error(DefaultErrorEnum.UNKNOWN_FAIL);
     }
 
-    public static <T> Result<T> error(ResultCode resultCode) {
-        return restResult(resultCode, null, null);
-    }
-
-    public static <T> Result<T> error(String message) {
-        ResultCode fail = ResultCode.FAIL;
-        fail.setMessage(message);
-        return restResult(fail, null, null);
+    public static <T> Result<T> error(GlobalErrorCodeService errorCode) {
+        return restResult(errorCode, null);
     }
 
     public static <T> Result<T> judge(boolean status) {
@@ -69,12 +65,20 @@ public class Result<T> implements Serializable {
         return Convert.convert(clazz, this.getData());
     }
 
-    private static <T> Result<T> restResult(ResultCode resp, T data, CommonPage page) {
+    public Map<String, Object> toMap() {
+        Map<String, Object> map = new LinkedHashMap<>();
+        map.put("code", code);
+        map.put("message", message);
+        map.put("data", data);
+        map.put("page", page);
+        return map;
+    }
+
+    private static <T> Result<T> restResult(GlobalErrorCodeService resp, T data) {
         Result<T> result = new Result<>();
         result.setCode(resp.getCode());
         result.setData(data);
         result.setMessage(resp.getMessage());
-        result.setPage(page);
         return result;
     }
 }
